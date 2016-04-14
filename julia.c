@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    FILE *f = fopen("/home/pi/Programming/Twitter/julia.ppm", "wb");
+    FILE *f = fopen("julia.ppm", "wb");
     fprintf(f, "P6\n%i %i 255\n", size, size);
 
     if (test == 0) {
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
                 fputc(0,f);
             }
         }
-    } else if (test == 3) {
+    } else if (test == 4) {
         for(i=0; i<size; i++) {
             for(j=0; j<size; j++) {
                 fputc(image[i][j],f);
