@@ -12,27 +12,20 @@ int image[size][size];
 
 double _Complex c;
 double _Complex z;
-int i;
-int j;
-int colour;
-int iteration;
-int row;
-int col;
 
-int main(int argc, char *argv[]) {
-    int test;
+void main(int argc, char *argv[]) {
     srand(time(NULL));
-   
-    test = rand() % 6;
-    for(row=0; row<size; row++) {
-        for(col=0; col<size; col++) {
+    
+    for (int row=0; row<size; row++) {
+        for (int col=0; col<size; col++) {
             c = atof(argv[1])+atof(argv[2])*I;
             z = (((float)col - (float)size/2)*4/size) + (((float)row - (float)size/2)*4/size)*I;
-            iteration = 0;
+            int iteration = 0;
             while(sqrt(creal(z)*creal(z) + cimag(z)*cimag(z)) < 2 && (iteration < max_iteration)) {
                 z = z*z + c;
                 iteration++;
             }
+            int color;
             if(iteration == max_iteration) {
                 colour = 255;
             } else {
@@ -43,60 +36,19 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    FILE *f = fopen("julia.ppm", "wb");
+    FILE* f = fopen("julia.ppm", "wb");
     fprintf(f, "P6\n%i %i 255\n", size, size);
 
-    if (test == 0) {
-        for(i=0; i<size; i++) {
-            for(j=0; j<size; j++) {
-                fputc(image[i][j],f);
-                fputc(0,f);
-                fputc(0,f);
-            }
-        }
-    } else if (test == 1) {
-        for(i=0; i<size; i++) {
-            for(j=0; j<size; j++) {
-                fputc(0,f);
-                fputc(image[i][j],f);
-                fputc(0,f);
-           }
-        }
-    } else if (test == 2) {
-        for(i=0; i<size; i++) {
-            for(j=0; j<size; j++) {
-                fputc(0,f);
-                fputc(0,f);
-                fputc(image[i][j],f);
-           }
-        }
-    } else if (test == 3) {
-        for(i=0; i<size; i++) {
-            for(j=0; j<size; j++) {
-                fputc(image[i][j],f);
-                fputc(image[i][j],f);
-                fputc(0,f);
-            }
-        }
-    } else if (test == 4) {
-        for(i=0; i<size; i++) {
-            for(j=0; j<size; j++) {
-                fputc(image[i][j],f);
-                fputc(0,f);
-                fputc(image[i][j],f);
-            }
-        }
-    } else {
-        for(i=0; i<size; i++) {
-            for(j=0; j<size; j++) {
-                fputc(0,f);
-                fputc(image[i][j],f);
-                fputc(image[i][j],f);
-           }
-        }
-    };
+    int random = (rand() % 6) + 1; // random number between 1 and 6 inclusive
 
-
+    for (int i=0; i<size; i++) {
+	for (int j=0; j<size; j++) {
+	    // makes the colour one of r,g,b,rg,gb,rb
+	    for (int bit=0; bit<3; bit++) {
+		fputc((((random >> bit) ^ 1) ? image[i][j] : 0), f);
+	    }
+	}
+    }
+    
     fclose(f);
-    return 0;
 }
