@@ -13,7 +13,7 @@ int image[size][size];
 double _Complex c;
 double _Complex z;
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     srand(time(NULL));
     
     for (int row=0; row<size; row++) {
@@ -25,7 +25,7 @@ void main(int argc, char *argv[]) {
                 z = z*z + c;
                 iteration++;
             }
-            int color;
+            int colour;
             if(iteration == max_iteration) {
                 colour = 255;
             } else {
@@ -51,4 +51,5 @@ void main(int argc, char *argv[]) {
     }
     
     fclose(f);
+    return 0;
 }
