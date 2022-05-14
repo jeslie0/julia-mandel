@@ -12,22 +12,41 @@
         dependencies = with pkgs; [  ]; # Input the build dependencies here
       in
         {
-          packages.c-julia = pkgs.stdenv.mkDerivation {
-            pname = "c-julia";
+          packages.juliac = pkgs.stdenv.mkDerivation {
+            pname = "juliac";
             version = "0.0.1";
             src = ./src;
-            buildInputs = [pkgs.libpng];
-            buildPhase = "gcc julia.c -o julia -lm";
+            buildInputs = [ pkgs.libpng ];
+            buildPhase = "gcc julia.c -o juliac -lm";
             installPhase = ''
                          mkdir -p $out/bin
                          cp julia $out/bin
                          '';
           };
 
+          packages.juliamandelpy = pkgs.stdenv.mkDerivation {
+            pname = "juliapy";
+            version = "0.0.1";
+            src = ./src;
+            buildInputs = [ (pkgs.python39.buildEnv.override {
+              extraLibs = with pkgs.python39Packages; [ ipython pillow ]; } ) ];
+
+            buildPhase = "chmod +x juliamandel.py";
+            installPhase = ''
+                           mkdir -p $out/bin
+                           cp juliamandel.py $out/bin/juliamandelpy
+                           '';
+        };
+
+
+
+
           defaultPackage = self.packages.${system}.c-julia;
 
           devShell = pkgs.mkShell {
             inputsFrom = [ self.packages.${system}.c-julia
+                           self.packages.${system}.juliamandelpy
+                           self.packages.${system}.tweet
                          ];
             buildInputs = with pkgs;
               [ clang-tools
