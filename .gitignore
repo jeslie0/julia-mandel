@@ -1,2 +1,7 @@
 .direnv/*
 result
+
+*.png
+*.ppm
+*.out
+*juliac

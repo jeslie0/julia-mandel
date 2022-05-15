@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import tweepy
 import time
 import random
@@ -30,17 +31,21 @@ def tweetimg(api, path):
     im.save('{0}/julia.png'.format(path))
 
     if z_im >= 0:
-        api.update_with_media('{0}/julia.png'.format(path), 'The filled-in Julia Set for c={0:.4f} + {1:.4f}i #fractals'.format(z_re, z_im))    
+        api.update_status_with_media('The filled-in Julia Set for c={0:.4f} + {1:.4f}i #fractals'.format(z_re, z_im), '{0}/julia.png'.format(path))
     else:
-         api.update_with_media('{0}/julia.png'.format(path), 'The filled-in Julia Set for c={0:.4f} - {1:.4f}i #fractals'.format(z_re, -z_im))
+         api.update_status_with_media('The filled-in Julia Set for c={0:.4f} - {1:.4f}i #fractals'.format(z_re, -z_im), '{0}/julia.png'.format(path))
 
 random.seed()
 
-CONSUMER_KEY = 	""
-CONSUMER_SECRET = ""
+keyfile = sys.argv[1]
+with open(keyfile) as file:
+    lines = file.readlines()
+    lines = [line.rstrip() for line in lines]
+    CONSUMER_KEY = lines[0]
+    CONSUMER_SECRET = lines[1]
+    ACCESS_KEY = lines[2]
+    ACCESS_SECRET = lines[3]
 
-ACCESS_KEY = ""
-ACCESS_SECRET = ""
 
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
