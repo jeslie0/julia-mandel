@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import tweepy
 import time
@@ -14,7 +16,7 @@ def tweetimg(api, path):
     z_re = randy()
     z_im = randy()
     
-    call(["{0}/julia.out".format(path),str(z_re), str(z_re)])
+    call(["{0}/julia.out".format(path), str(z_re), str(z_re)])
 
     im = Image.open('{0}/julia.ppm'.format(path))
     enhancer = ImageEnhance.Brightness(im)
@@ -45,8 +47,7 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
-path = os.path.dirname(os.path.realpath(__file__))
-os.chdir(path)
+path = os.getcwd()
 
 if os.path.isfile("{0}/julia.out".format(path)) == True:
     tweetimg(api, path)

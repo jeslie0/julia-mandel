@@ -13,19 +13,18 @@
       in
         {
           packages.juliac = pkgs.stdenv.mkDerivation {
-            pname = "juliac";
-            version = "0.0.1";
+            name = "juliac";
             src = ./src;
             buildInputs = [ pkgs.libpng ];
             buildPhase = "gcc julia.c -o juliac -lm";
             installPhase = ''
                          mkdir -p $out/bin
-                         cp julia $out/bin
+                         cp juliac $out/bin
                          '';
           };
 
           packages.juliamandelpy = pkgs.stdenv.mkDerivation {
-            pname = "juliapy";
+            pname = "juliamandelpy";
             version = "0.0.1";
             src = ./src;
             buildInputs = [ (pkgs.python39.buildEnv.override {
@@ -39,13 +38,28 @@
         };
 
 
+          packages.tweet = pkgs.stdenv.mkDerivation {
+            name = "tweet";
+            src = ./src;
+            buildInputs = [ (self.packages.${system}.juliac) (pkgs.python39.buildEnv.override {
+              extraLibs = with pkgs.python39Packages; [ ipython pillow tweepy ]; } ) ];
+            buildPhase = ''
+                         substituteInPlace ./tweet.py \
+                         --replace '{0}/julia.out' '${self.packages.${system}.juliac}/bin/juliac'
+                         chmod +x tweet.py
+                         '';
+            installPhase = ''
+                           mkdir -p $out/bin
+                           cp tweet.py $out/bin/tweet
+                           '';
+        };
 
 
-          defaultPackage = self.packages.${system}.c-julia;
+          defaultPackage = self.packages.${system}.juliac;
 
           devShell = pkgs.mkShell {
-            inputsFrom = [ self.packages.${system}.c-julia
-                           self.packages.${system}.juliamandelpy
+            inputsFrom = [ self.packages.${system}.juliac
+                           # self.packages.${system}.juliamandelpy
                            self.packages.${system}.tweet
                          ];
             buildInputs = with pkgs;
