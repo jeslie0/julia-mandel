@@ -45,8 +45,8 @@
               extraLibs = with pkgs.python39Packages; [ ipython pillow tweepy ]; } ) ];
             buildPhase = ''
                          substituteInPlace ./tweet.py \
-                         --replace '{0}/julia.out' '${self.packages.${system}.juliac}/bin/juliac' \
-                         --replace 'os.path.isfile("{0}/julia.out".format(path)) == ' ' '
+                         --replace 'os.path.isfile("{0}/julia.out".format(path)) == ' ' ' \
+                         --replace '{0}/julia.out' '${self.packages.${system}.juliac}/bin/juliac'
                          chmod +x tweet.py
                          '';
             installPhase = ''
