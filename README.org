@@ -1,0 +1,32 @@
+* Julia-mandel
+Code for generating Mandelbrot Sets, Julia Sets and tweeting them.
+
+To simply make an Julia Set, compile Julia.c and run "a.out c_real c_imaginary".
+
+To tweet a Julia set image, make sure that tweet.py and Julia.py are in the same folder. Make a Twitter Application and edit the required fields in tweet.py to link it to your account. Then run tweet.py. Requires PILLOW, tweepy.
+
+With help from [[https://github.com/majaha][majaha]].
+
+
+* Tweet
+To tweet a random julia set, you need to first make an account with [[https://developer.twitter.com][https://developer.twitter.com]] and get your API keys. Then, put them into a file (say =keys=) with the following four lines:
+#+begin_src conf
+<CONSUMER_KEY>
+<CONSUMER_SECRET>
+<ACCESS_KEY>
+<ACCESS_SECRET>
+#+end_src
+
+Then call =tweet.py= with this as an argument.
+#+begin_src shell
+python3 tweet.py keys
+#+end_src
+
+This will make and tweet the generated Julia image.
+
+* Nix
+This project is packaged as a nix flake. If you use flakes, you can do the following:
+#+begin_src shell
+nix run github:jeslie0/julia-mandel#juliac <z_real> <z_im> # Generates the julia set for the given complex number
+nix run github:jeslie0/julia-mandel#tweet <key_file> # Generates and tweets a Julia Set
+#+end_src
